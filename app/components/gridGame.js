@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import UsernameModal from './usernameModal';
 import GameOverModal from './gameOverModal';
+import Countdown from './countdown';
 import { sendEvent } from '@/utils/tinybird'
 
 function generateUUID() {
@@ -17,6 +18,7 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   
   // Set various states
   const [gameId, setGameId] = useState(''); // Set game id
+  const [showCountdown, setShowCountdown] = useState(false); // Show countdown timer
   const [gameStartTime, setGameStartTime] = useState(null); // Game start time
   const [clickStartTime, setClickStartTime] = useState(null); // Click start time
   const [targetIndex, setTargetIndex] = useState(null); // Target index of green circle
@@ -26,9 +28,7 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   const [gameOver, setGameOver] = useState(false); // Is the game over?
   const [showGameOverModal, setShowGameOverModal] = useState(false); // Show game over modal when game over
   const [tinybirdEnv, setTinybirdEnv] = useState({TB_HOST: '', TB_TOKEN: ''}); // Tinybird env for sending
-
-  // State for the current game's cumulative duration
-  const [currentGameProgress, setCurrentGameProgress] = useState([])
+  const [currentGameProgress, setCurrentGameProgress] = useState([]) // Current game's cumulative duration
 
   // Lift the currentGameProgress up any time it changes
   useEffect(() => {
@@ -44,6 +44,22 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
           })
           .catch(error => console.error('Error fetching Tinybird env variables: ', error));
   }, []);
+
+  // Handle the countdown timer before starting a new game
+  const handleCountdown = () => {
+    setShowCountdown(true);
+  };
+
+  const handleCountdownComplete = () => {
+    setShowCountdown(false);
+    handleStartGame();
+  }
+
+  const handleSetUsername = (username) => {
+    setUsername(username);
+    onUsernameChange(username);
+    handleCountdown();
+  }
 
   // Handle the click of one of the game buttons.
   const handleClick = (index, correct) => {
@@ -91,10 +107,14 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   };
 
   // When username is submitted, handle the game start
-  const handleStartGame = (username) => {
-    // Set the username
-    setUsername(username);
-    onUsernameChange(username);
+  const handleStartGame = () => {
+    // Set the click count to zero and current game progress
+    setClickCount(0);
+    setCurrentGameProgress([]);
+
+    // Reset game and remove game over modal
+    setGameOver(false);
+    setShowGameOverModal(false);
 
     // Set the start time for first click and reset game duration
     let startTime = new Date();
@@ -111,38 +131,6 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
     // Pass game started state to the analytics component
     onStartGame(true);
   };
-
-  // When the game ends, handle starting a new game
-  const handlePlayAgain = () => {
-    // Reset the click count to zero and current game progress
-    setClickCount(0);
-    setCurrentGameProgress([]);
-    
-    // Reset game and remove game over modal
-    setGameOver(false);
-    setShowGameOverModal(false);
-
-    // Set the start time for first click and reset game duration
-    let startTime = new Date();
-    setClickStartTime(startTime);
-    setGameStartTime(startTime);
-
-    // Set a new target button
-    const initialTarget = Math.floor(Math.random() * 25)+1;
-    setTargetIndex(initialTarget);
-
-    // Create a random game ID
-    setGameId(generateUUID());
-
-    // Pass game started state to the analytics component
-    onStartGame(true);
-  };
-
-  const handleStartOver = () => {
-    setGameOver(true);
-    onStartGame(false);
-    handlePlayAgain();
-  }
 
   // Render 25 buttons in the grid
   const renderButtons = () => {
@@ -167,20 +155,21 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
 
   return (
     <div className='app-container'>
+      {showCountdown && <Countdown onComplete={handleCountdownComplete} />}
       <UsernameModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        onStartGame={handleStartGame}
+        onSetUsername={handleSetUsername}
       />
       <GameOverModal
         isOpen={showGameOverModal}
-        onPlayAgain={handlePlayAgain}
+        onPlayAgain={handleCountdown}
       />
       <div className='top-container'>
         <h2 className = 'click-count'>{25 - clickCount}</h2>
         <button 
           className='start-button'
-          onClick={handleStartOver}>Start Over
+          onClick={handleCountdown}>Start Over
         </button>
       </div>
       <div className='buttons-container'>

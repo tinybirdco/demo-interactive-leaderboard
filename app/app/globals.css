@@ -59,6 +59,7 @@ h2 {
 }
 
 .app-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,6 +118,24 @@ h2 {
 .button.target {
   background-color: rgb(39, 247, 149);
   color: rgb(37, 40, 61);
+}
+
+.countdown-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.countdown {
+  font-size: 3rem;
+  color: white;
 }
 
 @media only screen and (min-width: 848px) {

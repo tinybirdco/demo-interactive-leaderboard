@@ -12,7 +12,7 @@ app.use(cors());
 
 // Show the service is running
 app.get('/', (req, res) => {
-    res.send('The server is running!')
+    res.send('The server is now running!')
 });
 
 // Get Tinybird environment variables

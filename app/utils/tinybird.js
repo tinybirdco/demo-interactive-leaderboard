@@ -3,7 +3,7 @@ const fastestGameUrl = (host, token) => {
 }
 
 const fastestClickUrl = (host, token) => {
-    return `https://${host}/v0/pipes/fastest_click.json?username=token=${token}`
+    return `https://${host}/v0/pipes/fastest_click.json?username=&token=${token}`
 }
 
 const favoriteTargetUrl = (host, token) => {

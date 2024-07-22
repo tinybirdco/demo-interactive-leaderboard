@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
 
-const UsernameModal = ({ isOpen, onRequestClose, onStartGame }) => {
+const UsernameModal = ({ isOpen, onRequestClose, onSetUsername }) => {
     // Set states for username and error message
     const [username, setUsername] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -14,8 +14,8 @@ const UsernameModal = ({ isOpen, onRequestClose, onStartGame }) => {
         if (username.trim() === '') {
             setErrorMessage('Please enter a username.');
         } else {
-            // Start the game and close the modal
-            onStartGame(username);
+            // Set the username and close the modal
+            onSetUsername(username);
             onRequestClose();
         }
     };
