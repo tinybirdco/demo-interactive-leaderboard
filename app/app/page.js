@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import GridGame from '@/components/gridGame';
-import Analytics from '@/components/analytics';
 
 
 export default function App() {
@@ -17,11 +16,6 @@ export default function App() {
         onStartGame={setGameStarted} 
         onUsernameChange={setUsername}
         updateGameProgress={setCurrentGameProgress}
-      />
-      <Analytics 
-        username={username} 
-        gameStarted={gameStarted}
-        currentGameProgress={currentGameProgress}
       />
     </div>
   );
