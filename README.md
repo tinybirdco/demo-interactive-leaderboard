@@ -74,7 +74,7 @@ TB_SIGNING_KEY=<your workspace admin token. Used to sign JWTs.>
 
 Note you can copy the any token from the Tinybird CLI with `tb token copy <token name>`.
 
-### 10. Run the "backend"" server
+### 7. Run the "backend"" server
 
 This app uses an Express app to proxy as a backend server to store Tinybird tokens and host an API route to generate a JWT. Run the backend server from the `/services` directory:
 
@@ -85,7 +85,7 @@ node server.js
 
 If you visit `http://localhost:3001` you'll see a message that the server is running.
 
-### 11. Run the app!
+### 8. Run the app!
 
 Run the application!
 
