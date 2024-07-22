@@ -41,34 +41,34 @@ export default function Analytics({username, gameStarted, currentGameProgress}) 
             <h2>Analytics for {username}</h2>
             <div className='metrics-container'>
                 <FastestClick
-                    host={tinybirdEnv.TB_HOST}
+                    host={TB_HOST}
                     jwt={jwt}
                     gameStarted={gameStarted}
                 />
                 <FastestGame
-                    host={tinybirdEnv.TB_HOST}
+                    host={TB_HOST}
                     jwt={jwt}
                     gameStarted={gameStarted}
                 />
                 <FavoriteTarget
-                    host={tinybirdEnv.TB_HOST}
+                    host={TB_HOST}
                     jwt={jwt}
                     gameStarted={gameStarted}
                 />
                 <NemesisTarget
-                    host={tinybirdEnv.TB_HOST}
+                    host={TB_HOST}
                     jwt={jwt}
                     gameStarted={gameStarted}
                 />
             </div>
             <GameTracker
-                host={tinybirdEnv.TB_HOST}
+                host={TB_HOST}
                 jwt={jwt}
                 gameStarted={gameStarted}
                 currentGameProgress={currentGameProgress}
             />
             <Leaderboard
-                host={tinybirdEnv.TB_HOST}
+                host={TB_HOST}
                 jwt={jwt}
                 username={username}
                 gameStarted={gameStarted}
