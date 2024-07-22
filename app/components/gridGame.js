@@ -144,6 +144,7 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
       <GameOverModal
         isOpen={showGameOverModal}
         onPlayAgain={handleCountdown}
+        duration={clickStartTime - gameStartTime}
       />
       <div className='top-container'>
         <h2 className = 'click-count'>{25 - clickCount}</h2>
