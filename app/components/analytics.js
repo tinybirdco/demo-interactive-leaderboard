@@ -20,7 +20,7 @@ export default function Analytics({username, gameStarted, currentGameProgress}) 
         if (username) {
             (async () => {
                 try {
-                    const jwtResponse = await fetch('/api/generateToken', {
+                    const jwtResponse = await fetch(`${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/generateToken`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
