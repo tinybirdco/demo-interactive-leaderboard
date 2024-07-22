@@ -23,7 +23,7 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   const [clickStartTime, setClickStartTime] = useState(null); // Click start time
   const [targetIndex, setTargetIndex] = useState(null); // Target index of green circle
   const [username, setUsername] = useState(''); // Username
-  const [isModalOpen, setIsModalOpen] = useState(true); // Username modal status
+  const [showUsernameModal, setShowUsernameModal] = useState(true); // Username modal status
   const [clickCount, setClickCount] = useState(0); // Game clicks remaining
   const [gameOver, setGameOver] = useState(false); // Is the game over?
   const [showGameOverModal, setShowGameOverModal] = useState(false); // Show game over modal when game over
@@ -50,15 +50,22 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
     setShowCountdown(true);
   };
 
+  // Start the game when the countdown finishes
   const handleCountdownComplete = () => {
     setShowCountdown(false);
     handleStartGame();
   }
 
+  // Set the username when input
   const handleSetUsername = (username) => {
     setUsername(username);
     onUsernameChange(username);
     handleCountdown();
+  }
+
+  // Show username modal
+  const handleShowUsernameModal = () => {
+    setShowUsernameModal(true);
   }
 
   // Handle the click of one of the game buttons.
@@ -157,8 +164,8 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
     <div className='app-container'>
       {showCountdown && <Countdown onComplete={handleCountdownComplete} />}
       <UsernameModal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
+        isOpen={showUsernameModal}
+        onRequestClose={() => setShowUsernameModal(false)}
         onSetUsername={handleSetUsername}
       />
       <GameOverModal
@@ -167,10 +174,16 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
       />
       <div className='top-container'>
         <h2 className = 'click-count'>{25 - clickCount}</h2>
-        <button 
-          className='start-button'
-          onClick={handleCountdown}>Start Over
-        </button>
+        <div className = 'top-buttons-container'>
+          <button 
+            className='start-button'
+            onClick={handleCountdown}>Start Over
+          </button>
+          <button 
+            className='username-button'
+            onClick={handleShowUsernameModal}>Set Username
+          </button>
+        </div>
       </div>
       <div className='buttons-container'>
         {renderButtons()}
