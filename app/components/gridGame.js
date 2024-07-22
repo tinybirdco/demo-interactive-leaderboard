@@ -174,6 +174,7 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
       />
       <div className='top-container'>
         <h2 className = 'click-count'>{25 - clickCount}</h2>
+        <p>Click the green target as fast as it moves!</p>
         <div className = 'top-buttons-container'>
           <button 
             className='start-button'
