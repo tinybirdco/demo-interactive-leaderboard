@@ -1,6 +1,16 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res) => {
+    // Ensure the request method is POST
+    if (req.method !== 'POST') {
+        res.setHeader('Allow', 'POST');
+        return res.status(405).end('Method Not Allowed');
+    }
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
     const { username } = req.body;
     const expiration = new Date();
     const signingKey = process.env.TB_SIGNING_KEY;
