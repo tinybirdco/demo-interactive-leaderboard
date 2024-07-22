@@ -25,12 +25,12 @@ const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
         data = bestGame.map((best, index) => ({
             click: best.click,
             best_game_duration: best.cumulative_duration,
-            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : 0,
+            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
         }));
     } else {
         data = currentGameProgress.map((game, index) => ({
             click: game.click,
-            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : 0,
+            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
         }));
     }
 
