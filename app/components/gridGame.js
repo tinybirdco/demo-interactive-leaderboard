@@ -6,6 +6,9 @@ import GameOverModal from './gameOverModal';
 import Countdown from './countdown';
 import { sendEvent } from '@/utils/tinybird'
 
+const TB_HOST = process.env.TB_HOST;
+const TB_TOKEN = process.env.TB_TOKEN;
+
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0,
@@ -34,16 +37,6 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   useEffect(() => {
     updateGameProgress(currentGameProgress);
   },[currentGameProgress]);
-
-  // Fetch Tinybird Env
-  useEffect(() => {
-      fetch('http://localhost:3001/api/tinybird')
-          .then(response => response.json())
-          .then(data => {
-              setTinybirdEnv(data);
-          })
-          .catch(error => console.error('Error fetching Tinybird env variables: ', error));
-  }, []);
 
   // Handle the countdown timer before starting a new game
   const handleCountdown = () => {
@@ -92,7 +85,7 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
         'correct': correct
       }
       // Send payload to Tinybird
-      sendEvent(payload, tinybirdEnv.TB_TOKEN, tinybirdEnv.TB_HOST, 'game_events');
+      sendEvent(payload, TB_TOKEN, TB_HOST, 'game_events');
 
       // set new start time to latest click time
       setClickStartTime(clickTime);
