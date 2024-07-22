@@ -72,12 +72,6 @@ export default function Analytics({username, gameStarted, currentGameProgress}) 
                     gameStarted={gameStarted}
                 />
             </div>
-            <GameTracker
-                host={tinybirdEnv.TB_HOST}
-                jwt={jwt}
-                gameStarted={gameStarted}
-                currentGameProgress={currentGameProgress}
-            />
             <Leaderboard
                 host={tinybirdEnv.TB_HOST}
                 jwt={jwt}
