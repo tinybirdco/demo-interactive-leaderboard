@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { leaderboardUrl, fetchTinybirdApi } from '@/utils/tinybird';
 import { Card, Title, BarList } from '@tremor/react';
 
-const Leaderboard = ({host, token, username, gameStarted}) => {
+const Leaderboard = ({host, jwt, username, gameStarted}) => {
 
     // set state to store the cumulative duration array for the best game
     const [data, setData] = useState([{
@@ -12,15 +12,12 @@ const Leaderboard = ({host, token, username, gameStarted}) => {
         'value': 0
     }])
 
-    // Define the Tinybird API url with props
-    let url = leaderboardUrl(host, token)
-
-    // Fetch the Tinybird API on game start
     useEffect(() => {
-        if (gameStarted) {
+        if (jwt) { 
+            let url = leaderboardUrl(host, jwt);
             fetchTinybirdApi(url, setData);
         }
-    }, [gameStarted]);
+    }, [jwt, gameStarted]);
 
     // Set the color of the current player on the leaderboard to green
     const rows = data.map((d) => ({

@@ -4,21 +4,20 @@ import React, { useState, useEffect } from 'react';
 import { favoriteTargetUrl, fetchTinybirdApi } from '@/utils/tinybird';
 import { Card } from '@tremor/react';
 
-const FavoriteTarget = ({host, token, username, gameStarted}) => {
+const FavoriteTarget = ({host, jwt, gameStarted}) => {
 
     const [data, setData] = useState([])
 
-    let url = favoriteTargetUrl(host, token, username)
-
     useEffect(() => {
-        if (gameStarted) {
+        if (jwt) { 
+            let url = favoriteTargetUrl(host, jwt);
             fetchTinybirdApi(url, setData);
         }
-    }, [gameStarted]);
+    }, [jwt, gameStarted]);
 
     const renderText = () => {
-        if(data.length > 0) {
-            return `${data[0].click_index}`;
+        if(data && data.length > 0) {
+            return `${data[0].target_index}`;
         } else {
             return 'None';
         }

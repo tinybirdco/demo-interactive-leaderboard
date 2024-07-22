@@ -1,25 +1,43 @@
-const fastestGameUrl = (host, token, username) => {
-    return `https://${host}/v0/pipes/fastest_game.json?username=${username}&token=${token}`
+const fastestGameUrl = (host, token) => {
+    return `https://${host}/v0/pipes/fastest_game.json?username=&token=${token}`
 }
 
-const fastestClickUrl = (host, token, username) => {
-    return `https://${host}/v0/pipes/fastest_click.json?username=${username}&token=${token}`
+const fastestClickUrl = (host, token) => {
+    return `https://${host}/v0/pipes/fastest_click.json?username=token=${token}`
 }
 
-const favoriteTargetUrl = (host, token, username) => {
-    return `https://${host}/v0/pipes/favorite_target.json?username=${username}&token=${token}`
+const favoriteTargetUrl = (host, token) => {
+    return `https://${host}/v0/pipes/favorite_target.json?username=&token=${token}`
 }
 
-const nemesisTargetUrl = (host, token, username) => {
-    return `https://${host}/v0/pipes/nemesis_target.json?username=${username}&token=${token}`
+const nemesisTargetUrl = (host, token) => {
+    return `https://${host}/v0/pipes/nemesis_target.json?username=&token=${token}`
 }
 
-const gameTrackerUrl = (host, token, username) => {
-    return `https://${host}/v0/pipes/game_tracker.json?username=${username}&token=${token}`
+const gameTrackerUrl = (host, token) => {
+    return `https://${host}/v0/pipes/game_tracker.json?username=&token=${token}`
 }
 
 const leaderboardUrl = (host, token) => {
     return `https://${host}/v0/pipes/leaderboard.json?&token=${token}`
+}
+
+const sendEvent = async (payload, token, host, datasource) => {
+    try {
+        fetch(`https://${host}/v0/events?name=${datasource}`,
+        {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        )
+        .then(res => res.json())
+        .then(data => console.log('Data sent to Tinybird: ', data))
+  } catch (error) {
+    console.error('Error sending data to Tinybird: ', error.message);
+  }
 }
 
 const fetchTinybirdApi = async (url, setData) => {
@@ -34,6 +52,7 @@ const fetchTinybirdApi = async (url, setData) => {
 }
 
 export {
+    sendEvent,
     fetchTinybirdApi,
     fastestGameUrl,
     fastestClickUrl,

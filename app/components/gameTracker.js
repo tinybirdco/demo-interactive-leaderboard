@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { gameTrackerUrl, fetchTinybirdApi } from '@/utils/tinybird';
 import { Card, Title, AreaChart } from '@tremor/react';
 
-const GameTracker = ({host, token, username, gameStarted, currentGameProgress}) => {
+const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
 
     // set state to store the cumulative duration array for the best game
     const [bestGame, setBestGame] = useState([{
@@ -12,15 +12,12 @@ const GameTracker = ({host, token, username, gameStarted, currentGameProgress}) 
         'cumulative_duration': 0
     }])
 
-    // Define the Tinybird API url with props
-    let url = gameTrackerUrl(host, token, username)
-
-    // Fetch the Tinybird API on game start
     useEffect(() => {
-        if (gameStarted) {
+        if (jwt) { 
+            let url = gameTrackerUrl(host, jwt);
             fetchTinybirdApi(url, setBestGame);
         }
-    }, [gameStarted]);
+    }, [jwt, gameStarted]);
 
     // Combine current game and best game into a single array
     const data = bestGame.map((best, index) => ({
@@ -55,7 +52,7 @@ const GameTracker = ({host, token, username, gameStarted, currentGameProgress}) 
                 setLineColor('red');
             }
             // Update the title with the cumulative duration of your current game
-            setTitle(`Current Time: ${currentDuration}`)
+            setTitle(`Current Time: ${currentDuration} ms`)
         }
     }, [currentGameProgress]); // Update states on each click
 

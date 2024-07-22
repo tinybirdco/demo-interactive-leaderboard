@@ -4,20 +4,18 @@ import React, { useState, useEffect } from 'react';
 import { fastestClickUrl, fetchTinybirdApi } from '@/utils/tinybird';
 import { Card } from '@tremor/react';
 
-const FastestClick = ({host, token, username, gameStarted}) => {
-
+const FastestClick = ({ host, jwt, gameStarted}) => {
     const [data, setData] = useState([])
 
-    let url = fastestClickUrl(host, token, username)
-
     useEffect(() => {
-        if (gameStarted) {
+        if (jwt) { 
+            let url = fastestClickUrl(host, jwt);
             fetchTinybirdApi(url, setData);
         }
-    }, [gameStarted]);
+    }, [jwt, gameStarted]);
 
     const renderText = () => {
-        if(data.length > 0) {
+        if(data && data.length > 0) {
             return `${data[0].duration} ms`;
         } else {
             return 'None';

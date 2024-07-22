@@ -1,71 +1,86 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import GameTracker from './gameTracker';
 import FastestGame from './fastestGame';
 import FastestClick from './fastestClick';
 import FavoriteTarget from './favoriteTarget';
 import NemesisTarget from './nemesisTarget';
+import GameTracker from './gameTracker';
 import Leaderboard from './leaderboard';
-import { Grid } from '@tremor/react';
 
 export default function Analytics({username, gameStarted, currentGameProgress}) { 
    
-    // Set Tinybird auth states
-    const [tinybirdHost, setTinybirdHost] = useState('');
-    const [tinybirdToken, setTinybirdToken] = useState('');
+    // Set Tinybird env
+    const [tinybirdEnv, setTinybirdEnv] = useState({TB_HOST: '', TB_TOKEN: ''});
+    
+    // JWT
+    const [jwt, setJwt] = useState('');
 
-    // Fetch tokens from the proxy
+    // Fetch Tinybird Env
     useEffect(() => {
         fetch('http://localhost:3001/api/tinybird')
             .then(response => response.json())
             .then(data => {
-                const { TINYBIRD_HOST, TINYBIRD_TOKEN } = data;
-                setTinybirdHost(TINYBIRD_HOST);
-                setTinybirdToken(TINYBIRD_TOKEN);
+                setTinybirdEnv(data);
             })
             .catch(error => console.error('Error fetching Tinybird env variables: ', error));
     }, []);
 
+    // Generate JWT when username is updated
+    useEffect(() => {
+        if (username) {
+            (async () => {
+                try {
+                    const jwtResponse = await fetch('http://localhost:3001/api/generateToken', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username })
+                    });
+                    const tokenData = await jwtResponse.json();
+                    setJwt(tokenData.token);
+                } catch (error) {
+                    console.error('Error generating JWT: ', error.message);
+                }
+            })(); 
+        }
+    }, [username]);
+
     return (
         <div className='analytics-container'>
             <h2>Analytics for {username}</h2>
-            <Grid className='grid-cols-4 gap-6'>
-                <FastestGame
-                    host={tinybirdHost}
-                    token={tinybirdToken}
-                    username={username}
+            <div className='metrics-container'>
+                <FastestClick
+                    host={tinybirdEnv.TB_HOST}
+                    jwt={jwt}
                     gameStarted={gameStarted}
                 />
-                <FastestClick
-                    host={tinybirdHost}
-                    token={tinybirdToken}
-                    username={username}
+                <FastestGame
+                    host={tinybirdEnv.TB_HOST}
+                    jwt={jwt}
                     gameStarted={gameStarted}
                 />
                 <FavoriteTarget
-                    host={tinybirdHost}
-                    token={tinybirdToken}
-                    username={username}
+                    host={tinybirdEnv.TB_HOST}
+                    jwt={jwt}
                     gameStarted={gameStarted}
                 />
                 <NemesisTarget
-                    host={tinybirdHost}
-                    token={tinybirdToken}
-                    username={username}
+                    host={tinybirdEnv.TB_HOST}
+                    jwt={jwt}
                     gameStarted={gameStarted}
                 />
-            </Grid>
+            </div>
             <GameTracker
-                host={tinybirdHost}
-                token={tinybirdToken}
-                username={username}
+                host={tinybirdEnv.TB_HOST}
+                jwt={jwt}
                 gameStarted={gameStarted}
                 currentGameProgress={currentGameProgress}
             />
             <Leaderboard
-                host={tinybirdHost}
-                token={tinybirdToken}
+                host={tinybirdEnv.TB_HOST}
+                jwt={jwt}
                 username={username}
                 gameStarted={gameStarted}
             />

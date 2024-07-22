@@ -4,20 +4,19 @@ import React, { useState, useEffect } from 'react';
 import { fastestGameUrl, fetchTinybirdApi } from '@/utils/tinybird';
 import { Card } from '@tremor/react';
 
-const FastestGame = ({host, token, username, gameStarted}) => {
+const FastestGame = ({host, jwt, gameStarted}) => {
 
     const [data, setData] = useState([])
 
-    let url = fastestGameUrl(host, token, username)
-
     useEffect(() => {
-        if (gameStarted) {
+        if (jwt) { 
+            let url = fastestGameUrl(host, jwt);
             fetchTinybirdApi(url, setData);
         }
-    }, [gameStarted]);
+    }, [jwt, gameStarted]);
 
-    const renderTitle = () => {
-        if(data.length > 0) {
+    const renderText = () => {
+        if(data && data.length > 0) {
             return `${data[0].total_duration} ms`;
         } else {
             return 'None';
@@ -31,7 +30,7 @@ const FastestGame = ({host, token, username, gameStarted}) => {
             decorationColor='zinc'
         >
             <p>Fastest Game</p>
-            <h2>{renderTitle()}</h2>
+            <h2>{renderText()}</h2>
         </Card>
     );
 };

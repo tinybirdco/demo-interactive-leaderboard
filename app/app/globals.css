@@ -81,6 +81,12 @@ h2 {
   justify-content: center;
 }
 
+.metrics-container {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .buttons-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

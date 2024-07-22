@@ -3,25 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import UsernameModal from './usernameModal';
 import GameOverModal from './gameOverModal';
-
-async function sendToConfluent(payload) {
-  console.log('Sending data to Confluent: ', payload);
-
-  try {
-    const response = await fetch('http://localhost:3001/api/sendToConfluent', {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const responseData = await response.json();
-    console.log('Data sent to Kafka: ', responseData);
-  } catch (error) {
-    console.error('Error sending data to Kafka: ', error.message);
-  }
-}
+import { sendEvent } from '@/utils/tinybird'
 
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -43,7 +25,8 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   const [clickCount, setClickCount] = useState(0); // Game clicks remaining
   const [gameOver, setGameOver] = useState(false); // Is the game over?
   const [showGameOverModal, setShowGameOverModal] = useState(false); // Show game over modal when game over
-  
+  const [tinybirdEnv, setTinybirdEnv] = useState({TB_HOST: '', TB_TOKEN: ''}); // Tinybird env for sending
+
   // State for the current game's cumulative duration
   const [currentGameProgress, setCurrentGameProgress] = useState([])
 
@@ -51,6 +34,16 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   useEffect(() => {
     updateGameProgress(currentGameProgress);
   },[currentGameProgress]);
+
+  // Fetch Tinybird Env
+  useEffect(() => {
+      fetch('http://localhost:3001/api/tinybird')
+          .then(response => response.json())
+          .then(data => {
+              setTinybirdEnv(data);
+          })
+          .catch(error => console.error('Error fetching Tinybird env variables: ', error));
+  }, []);
 
   // Handle the click of one of the game buttons.
   const handleClick = (index, correct) => {
@@ -72,10 +65,11 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
         'start_time': clickStartTime.toISOString(),
         'click_time': clickTime.toISOString(),
         'duration': duration,
-        'index': index,
+        'target_index': index,
         'correct': correct
       }
-      sendToConfluent(payload);
+      // Send payload to Tinybird
+      sendEvent(payload, tinybirdEnv.TB_TOKEN, tinybirdEnv.TB_HOST, 'game_events');
 
       // set new start time to latest click time
       setClickStartTime(clickTime);
