@@ -10,10 +10,10 @@ SQL >
       start_time,
       click_time,
       duration,
-      click_index,
+      target_index,
       correct
     FROM game_events
-    WHERE username = {{String(username, 'cameron')}}
+    WHERE username = {{String(user)}}
     AND correct = 1
     ORDER BY game_id DESC, click_time ASC
 

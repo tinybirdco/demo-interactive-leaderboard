@@ -13,7 +13,7 @@ SQL >
     SELECT
       duration
     FROM game_events
-    WHERE username = {{String(username, default='cameron')}}
+    WHERE username = {{String(user)}}
     AND correct = 1
     ORDER BY duration ASC limit 1
 
