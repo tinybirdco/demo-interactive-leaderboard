@@ -9,7 +9,6 @@ import GameTracker from './gameTracker';
 import Leaderboard from './leaderboard';
 
 const TB_HOST = process.env.TB_HOST;
-const TB_TOKEN = process.env.TB_TOKEN;
 
 export default function Analytics({username, gameStarted, currentGameProgress}) {  
     // JWT
@@ -20,7 +19,7 @@ export default function Analytics({username, gameStarted, currentGameProgress}) 
         if (username) {
             (async () => {
                 try {
-                    const jwtResponse = await fetch(`${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/generateToken`, {
+                    const jwtResponse = await fetch('/api/generateToken', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
