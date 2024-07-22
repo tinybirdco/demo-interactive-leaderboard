@@ -29,7 +29,7 @@ const Leaderboard = ({host, jwt, username, gameStarted}) => {
     return (
         <Card className="mt-6" decoration="top" decorationColor='zinc'>
             <Title>Leaderboard</Title>
-            <BarList className="h-48"
+            <BarList className="h-80"
                 data={rows}
                 sortOrder='ascending'
             />

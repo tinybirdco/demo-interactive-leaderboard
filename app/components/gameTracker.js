@@ -21,16 +21,16 @@ const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
 
     // Combine current game and best game into a single array
     let data = [];
-    if (bestGame) {
+    if (bestGame.length > 0) {
         data = bestGame.map((best, index) => ({
             click: best.click,
             best_game_duration: best.cumulative_duration,
-            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
+            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : 0,
         }));
     } else {
         data = currentGameProgress.map((game, index) => ({
             click: game.click,
-            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
+            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : 0,
         }));
     }
 
@@ -54,7 +54,7 @@ const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
             let currentGameIndex = currentGameProgress.length-1;
             let currentDuration = currentGameProgress[currentGameIndex].cumulative_duration;
             
-            if (bestGame && currentDuration > bestGame[currentGameIndex].cumulative_duration) {
+            if (bestGame.length > 0 && currentDuration > bestGame[currentGameIndex].cumulative_duration) {
                 setLineColor('red');
             } else {
                 setLineColor('green');
