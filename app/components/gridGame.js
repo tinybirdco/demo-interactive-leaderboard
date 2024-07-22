@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import UsernameModal from './usernameModal';
 import GameOverModal from './gameOverModal';
 import Countdown from './countdown';
-import { sendEvent } from '@/utils/tinybird'
 
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -27,23 +26,12 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
   const [clickCount, setClickCount] = useState(0); // Game clicks remaining
   const [gameOver, setGameOver] = useState(false); // Is the game over?
   const [showGameOverModal, setShowGameOverModal] = useState(false); // Show game over modal when game over
-  const [tinybirdEnv, setTinybirdEnv] = useState({TB_HOST: '', TB_TOKEN: ''}); // Tinybird env for sending
   const [currentGameProgress, setCurrentGameProgress] = useState([]) // Current game's cumulative duration
 
   // Lift the currentGameProgress up any time it changes
   useEffect(() => {
     updateGameProgress(currentGameProgress);
   },[currentGameProgress]);
-
-  // Fetch Tinybird Env
-  useEffect(() => {
-      fetch('http://localhost:3001/api/tinybird')
-          .then(response => response.json())
-          .then(data => {
-              setTinybirdEnv(data);
-          })
-          .catch(error => console.error('Error fetching Tinybird env variables: ', error));
-  }, []);
 
   // Handle the countdown timer before starting a new game
   const handleCountdown = () => {
@@ -78,21 +66,6 @@ export default function GridGame({ onStartGame,  onUsernameChange, updateGamePro
 
       // Set current progress
       setCurrentGameProgress([...currentGameProgress, {'click': currentGameProgress.length + 1, 'cumulative_duration': totalDuration}]);
-
-      // Send the data to the Confluent proxy
-      let payload = {
-        'timestamp': new Date().toISOString(),
-        'username': username,
-        'game_id': gameId,
-        'event_type': 'click',
-        'start_time': clickStartTime.toISOString(),
-        'click_time': clickTime.toISOString(),
-        'duration': duration,
-        'target_index': index,
-        'correct': correct
-      }
-      // Send payload to Tinybird
-      sendEvent(payload, tinybirdEnv.TB_TOKEN, tinybirdEnv.TB_HOST, 'game_events');
 
       // set new start time to latest click time
       setClickStartTime(clickTime);
