@@ -5,7 +5,6 @@ import FastestGame from './fastestGame';
 import FastestClick from './fastestClick';
 import FavoriteTarget from './favoriteTarget';
 import NemesisTarget from './nemesisTarget';
-import GameTracker from './gameTracker';
 import Leaderboard from './leaderboard';
 
 export default function Analytics({username, gameStarted, currentGameProgress}) { 
