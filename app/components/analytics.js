@@ -8,30 +8,19 @@ import NemesisTarget from './nemesisTarget';
 import GameTracker from './gameTracker';
 import Leaderboard from './leaderboard';
 
-export default function Analytics({username, gameStarted, currentGameProgress}) { 
-   
-    // Set Tinybird env
-    const [tinybirdEnv, setTinybirdEnv] = useState({TB_HOST: '', TB_TOKEN: ''});
-    
+const TB_HOST = process.env.TB_HOST;
+const TB_TOKEN = process.env.TB_TOKEN;
+
+export default function Analytics({username, gameStarted, currentGameProgress}) {  
     // JWT
     const [jwt, setJwt] = useState('');
-
-    // Fetch Tinybird Env
-    useEffect(() => {
-        fetch('http://localhost:3001/api/tinybird')
-            .then(response => response.json())
-            .then(data => {
-                setTinybirdEnv(data);
-            })
-            .catch(error => console.error('Error fetching Tinybird env variables: ', error));
-    }, []);
 
     // Generate JWT when username is updated
     useEffect(() => {
         if (username) {
             (async () => {
                 try {
-                    const jwtResponse = await fetch('http://localhost:3001/api/generateToken', {
+                    const jwtResponse = await fetch('/api/generateToken', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
