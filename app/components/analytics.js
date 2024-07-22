@@ -5,8 +5,6 @@ import FastestGame from './fastestGame';
 import FastestClick from './fastestClick';
 import FavoriteTarget from './favoriteTarget';
 import NemesisTarget from './nemesisTarget';
-import GameTracker from './gameTracker';
-import Leaderboard from './leaderboard';
 
 export default function Analytics({username, gameStarted, currentGameProgress}) { 
    
@@ -72,18 +70,6 @@ export default function Analytics({username, gameStarted, currentGameProgress}) 
                     gameStarted={gameStarted}
                 />
             </div>
-            <GameTracker
-                host={tinybirdEnv.TB_HOST}
-                jwt={jwt}
-                gameStarted={gameStarted}
-                currentGameProgress={currentGameProgress}
-            />
-            <Leaderboard
-                host={tinybirdEnv.TB_HOST}
-                jwt={jwt}
-                username={username}
-                gameStarted={gameStarted}
-            />
         </div>
     )
 }
