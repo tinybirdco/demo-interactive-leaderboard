@@ -1,21 +1,21 @@
 const fastestGameUrl = (host, token) => {
-    return `https://${host}/v0/pipes/fastest_game.json?username=&token=${token}`
+    return `https://${host}/v0/pipes/fastest_game.json?user=&token=${token}`
 }
 
 const fastestClickUrl = (host, token) => {
-    return `https://${host}/v0/pipes/fastest_click.json?username=&token=${token}`
+    return `https://${host}/v0/pipes/fastest_click.json?user=&token=${token}`
 }
 
 const favoriteTargetUrl = (host, token) => {
-    return `https://${host}/v0/pipes/favorite_target.json?username=&token=${token}`
+    return `https://${host}/v0/pipes/favorite_target.json?user=&token=${token}`
 }
 
 const nemesisTargetUrl = (host, token) => {
-    return `https://${host}/v0/pipes/nemesis_target.json?username=&token=${token}`
+    return `https://${host}/v0/pipes/nemesis_target.json?user=&token=${token}`
 }
 
 const gameTrackerUrl = (host, token) => {
-    return `https://${host}/v0/pipes/game_tracker.json?username=&token=${token}`
+    return `https://${host}/v0/pipes/game_tracker.json?user=&token=${token}`
 }
 
 const leaderboardUrl = (host, token) => {

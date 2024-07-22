@@ -20,11 +20,19 @@ const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
     }, [jwt, gameStarted]);
 
     // Combine current game and best game into a single array
-    const data = bestGame.map((best, index) => ({
-        click: best.click,
-        best_game_duration: best.cumulative_duration,
-        current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
-    }));
+    let data = [];
+    if (bestGame) {
+        data = bestGame.map((best, index) => ({
+            click: best.click,
+            best_game_duration: best.cumulative_duration,
+            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
+        }));
+    } else {
+        data = currentGameProgress.map((game, index) => ({
+            click: game.click,
+            current_game_duration: currentGameProgress[index] ? currentGameProgress[index].cumulative_duration : null,
+        }));
+    }
 
     // Set states for line color and card title
     const [lineColor, setLineColor] = useState('red');
@@ -40,16 +48,16 @@ const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
         }
         
         // If game is in progress, update color and title
-        if (currentGameProgress.length > 0 && bestGame.length > 0) {
+        if (currentGameProgress.length > 0) {
             
             // Define cumulative duration of current game
             let currentGameIndex = currentGameProgress.length-1;
             let currentDuration = currentGameProgress[currentGameIndex].cumulative_duration;
             
-            if (currentDuration < bestGame[currentGameIndex].cumulative_duration) {
-                setLineColor('green');
-            } else {
+            if (bestGame && currentDuration > bestGame[currentGameIndex].cumulative_duration) {
                 setLineColor('red');
+            } else {
+                setLineColor('green');
             }
             // Update the title with the cumulative duration of your current game
             setTitle(`Current Time: ${currentDuration} ms`)
@@ -62,8 +70,8 @@ const GameTracker = ({host, jwt, gameStarted, currentGameProgress}) => {
             <AreaChart className="h-48"
                 data={data}
                 index='click'
-                categories={['best_game_duration', 'current_game_duration']}
-                colors={['zinc', lineColor]}
+                categories={bestGame?['best_game_duration', 'current_game_duration']:['current_game_duration']}
+                colors={bestGame?['zinc', lineColor]:[lineColor]}
                 showLegend={false}
                 showYAxis={false}
                 showGridLines={false}
