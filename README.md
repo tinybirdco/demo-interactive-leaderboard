@@ -31,7 +31,7 @@ cd app
 npm install
 ```
 
-### 4. Install the Tinybird CLI
+### 3. Install the Tinybird CLI
 
 ```sh
 cd tinybird
@@ -40,20 +40,19 @@ source .venv/bin/activate
 pip install tinybird-cli
 ```
 
-### 5. Authenticate to Tinybird
+### 4. Authenticate to Tinybird
 
 Copy your User Admin Token from the Tinybird UI. Your user admin token is the token with the format admin <your email address>.
 
 From the `/tinybird` directory, run the following command:
 
 ```sh
-export TB_TOKEN=<your user admin token>
-tb auth
+tb auth --token <your user admin token>
 ```
 
 > :warning: Your token and workspace details will be stored in a .tinyb file. If you intend to push this to a public repository, add the `.tinyb` to your `.gitignore`.
 
-### 7. Push the resources to Tinybird
+### 5. Push the resources to Tinybird
 
 Run the following command to push Tinybird resources to the Tinybird server.
 
@@ -62,9 +61,9 @@ cd tinybird
 tb push --force
 ```
 
-### 9. Add your Tinybird host and token to .env
+### 6. Create local Environment Variables.
 
-Open your `.env.local` and add the following:
+Create an `.env.local` and add the following:
 
 ```
 TB_HOST=<your tinybird host>>
@@ -75,11 +74,11 @@ TB_SIGNING_KEY=<your workspace admin token. Used to sign JWTs.>
 
 Note you can copy the any token from the Tinybird CLI with `tb token copy <token name>`.
 
-### 10. Run the local server
+### 10. Run the "backend"" server
 
-This app uses a proxy to handle requests to Confluent and to store Tinybird tokens. Run the proxy server from the `/services` directory:
+This app uses an Express app to proxy as a backend server to store Tinybird tokens and host an API route to generate a JWT. Run the backend server from the `/services` directory:
 
-```
+```sh
 cd services
 node server.js
 ```
@@ -94,7 +93,7 @@ Run the application!
 npm run dev
 ```
 
-Open it at `http://localhost:3000` and play the game. Have fun!
+Open it at `http://localhost:3000` and play the game. Have fun, and try to beat your record!
 
 ## Contributing
 
